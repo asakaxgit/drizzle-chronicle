@@ -7,18 +7,18 @@ import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
  * Each test should create its own database to ensure isolation
  */
 export function createTestDb(): {
-  db: BetterSQLite3Database;
-  sqlite: Database.Database;
-  cleanup: () => void;
+	db: BetterSQLite3Database;
+	sqlite: Database.Database;
+	cleanup: () => void;
 } {
-  const sqlite = new Database(":memory:");
-  const db = drizzle(sqlite);
+	const sqlite = new Database(":memory:");
+	const db = drizzle(sqlite);
 
-  const cleanup = () => {
-    sqlite.close();
-  };
+	const cleanup = () => {
+		sqlite.close();
+	};
 
-  return { db, sqlite, cleanup };
+	return { db, sqlite, cleanup };
 }
 
 /**
@@ -26,12 +26,12 @@ export function createTestDb(): {
  * Automatically handles cleanup
  */
 export async function withTestDb<T>(
-  fn: (db: BetterSQLite3Database, sqlite: Database.Database) => T | Promise<T>
+	fn: (db: BetterSQLite3Database, sqlite: Database.Database) => T | Promise<T>,
 ): Promise<T> {
-  const { db, sqlite, cleanup } = createTestDb();
-  try {
-    return await fn(db, sqlite);
-  } finally {
-    cleanup();
-  }
+	const { db, sqlite, cleanup } = createTestDb();
+	try {
+		return await fn(db, sqlite);
+	} finally {
+		cleanup();
+	}
 }

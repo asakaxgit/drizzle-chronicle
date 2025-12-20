@@ -6,13 +6,13 @@
 
 export { Chronicle } from "./core/chronicle";
 export type {
-  ChronicleConfig,
-  ChronicleDatabase,
-  VersioningStrategy,
-  VersionOperation,
-  VersionMetadata,
-  VersionedTable,
-  VersionQueryOptions,
-  VersionedRecord,
-  RollbackOptions,
+	ChronicleConfig,
+	ChronicleDatabase,
+	VersioningStrategy,
+	VersionOperation,
+	VersionMetadata,
+	VersionedTable,
+	VersionQueryOptions,
+	VersionedRecord,
+	RollbackOptions,
 } from "./core/types";
