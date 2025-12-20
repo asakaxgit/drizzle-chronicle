@@ -30,14 +30,13 @@
     "types": ["node", "vitest/globals"]
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "tests/**/*",
+    "vitest.config.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "tests",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "dist"
   ]
 }
 
