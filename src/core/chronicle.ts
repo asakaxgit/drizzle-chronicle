@@ -20,6 +20,13 @@ export class Chronicle {
 	private config: Required<ChronicleConfig>;
 	private versionedTables: Map<string, VersionedTable> = new Map();
 
+	/**
+	 * Type guard to safely check if a value is a record
+	 */
+	private isRecord(value: unknown): value is Record<string, unknown> {
+		return typeof value === "object" && value !== null && !Array.isArray(value);
+	}
+
 	constructor(db: ChronicleDatabase, config: ChronicleConfig = {}) {
 		this.db = db;
 		// Access the underlying SQLite database from Drizzle
@@ -157,6 +164,10 @@ export class Chronicle {
 			.prepare(`SELECT * FROM ${tableName} WHERE ${whereClause}`)
 			.get(...whereValues);
 
+		if (!current || !this.isRecord(current)) {
+			throw new Error("Record not found");
+		}
+
 		// Update main table
 		const setClause = Object.keys(values)
 			.map((key) => `${key} = ?`)
@@ -190,7 +201,7 @@ export class Chronicle {
 			.prepare(`SELECT * FROM ${tableName} WHERE ${whereClause}`)
 			.get(...whereValues);
 
-		if (!current) {
+		if (!current || !this.isRecord(current)) {
 			throw new Error("Record not found");
 		}
 
