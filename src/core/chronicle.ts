@@ -1,11 +1,11 @@
-import type { SQLiteTable } from "drizzle-orm/sqlite-core";
 import type Database from "better-sqlite3";
+import type { SQLiteTable } from "drizzle-orm/sqlite-core";
 import type {
 	ChronicleConfig,
 	ChronicleDatabase,
+	RollbackOptions,
 	VersionedTable,
 	VersionOperation,
-	RollbackOptions,
 } from "./types";
 
 /**

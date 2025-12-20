@@ -7,7 +7,7 @@
 
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
-import { integer, text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { Chronicle } from "../src";
 import type { VersionedRecord } from "../src/core/types";
 

@@ -1,5 +1,5 @@
-import type { SQLiteTable } from "drizzle-orm/sqlite-core";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
+import type { SQLiteTable } from "drizzle-orm/sqlite-core";
 
 /**
  * Strategy for versioning: simple, uni-temporal, or bi-temporal

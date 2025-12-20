@@ -8,11 +8,11 @@ export { Chronicle } from "./core/chronicle";
 export type {
 	ChronicleConfig,
 	ChronicleDatabase,
-	VersioningStrategy,
-	VersionOperation,
-	VersionMetadata,
-	VersionedTable,
-	VersionQueryOptions,
-	VersionedRecord,
 	RollbackOptions,
+	VersionedRecord,
+	VersionedTable,
+	VersioningStrategy,
+	VersionMetadata,
+	VersionOperation,
+	VersionQueryOptions,
 } from "./core/types";

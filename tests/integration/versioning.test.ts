@@ -1,8 +1,8 @@
-import { describe, test, expect } from "vitest";
-import { integer, text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { describe, expect, test } from "vitest";
 import { Chronicle } from "../../src";
-import { withTestDb } from "../helpers/test-db";
 import type { VersionedRecord } from "../../src/core/types";
+import { withTestDb } from "../helpers/test-db";
 
 // Schema for integration tests
 const users = sqliteTable("users", {
