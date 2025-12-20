@@ -3,40 +3,32 @@
     // Language and Environment
     "target": "ES2022",
     "lib": ["ES2022"],
-    
+
     // Modules
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
-    
+
     // Emit
     "outDir": "./dist",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "noEmit": false,
-    
+
     // Type Checking
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    
+
     // Interop Constraints
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    
+
     // Type Definitions
     "types": ["node", "vitest/globals"]
   },
-  "include": [
-    "src/**/*",
-    "tests/**/*",
-    "vitest.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*", "tests/**/*", "vitest.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }
-

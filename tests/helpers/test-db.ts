@@ -1,6 +1,6 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 
 /**
  * Creates an in-memory SQLite database for testing
@@ -11,7 +11,7 @@ export function createTestDb(): {
   sqlite: Database.Database;
   cleanup: () => void;
 } {
-  const sqlite = new Database(':memory:');
+  const sqlite = new Database(":memory:");
   const db = drizzle(sqlite);
 
   const cleanup = () => {

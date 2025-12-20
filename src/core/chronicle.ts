@@ -1,13 +1,13 @@
-import type { SQLiteTable } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
-import type Database from 'better-sqlite3';
+import type { SQLiteTable } from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import type Database from "better-sqlite3";
 import type {
   ChronicleConfig,
   ChronicleDatabase,
   VersionedTable,
   VersionOperation,
   RollbackOptions,
-} from './types';
+} from "./types";
 
 /**
  * Chronicle - Temporal database wrapper for Drizzle ORM
@@ -26,8 +26,8 @@ export class Chronicle {
     // Access the underlying SQLite database from Drizzle
     this.sqlite = (db as any).session.client as Database.Database;
     this.config = {
-      strategy: config.strategy ?? 'simple-versioning',
-      historyTableSuffix: config.historyTableSuffix ?? '_history',
+      strategy: config.strategy ?? "simple-versioning",
+      historyTableSuffix: config.historyTableSuffix ?? "_history",
       autoCreateHistoryTables: config.autoCreateHistoryTables ?? true,
     };
   }
@@ -65,32 +65,34 @@ export class Chronicle {
     const historyTableName = `${tableName}${this.config.historyTableSuffix}`;
 
     // Get column definitions from the original table
-    const columns = Object.keys(table).filter(key => {
+    const columns = Object.keys(table).filter((key) => {
       const value = table[key as keyof typeof table];
-      return value && typeof value === 'object' && 'name' in value;
+      return value && typeof value === "object" && "name" in value;
     });
 
     // Build CREATE TABLE statement for history table
     // Extract column types from Drizzle schema
-    const columnDefs = columns.map(col => {
-      const column = table[col as keyof typeof table] as any;
-      const columnName = column.name;
+    const columnDefs = columns
+      .map((col) => {
+        const column = table[col as keyof typeof table] as any;
+        const columnName = column.name;
 
-      // Map Drizzle column types to SQLite types
-      let sqliteType = 'TEXT'; // default
+        // Map Drizzle column types to SQLite types
+        let sqliteType = "TEXT"; // default
 
-      if (column.dataType === 'integer' || column.columnType === 'SQLiteInteger') {
-        sqliteType = 'INTEGER';
-      } else if (column.dataType === 'real' || column.columnType === 'SQLiteReal') {
-        sqliteType = 'REAL';
-      } else if (column.dataType === 'text' || column.columnType === 'SQLiteText') {
-        sqliteType = 'TEXT';
-      } else if (column.dataType === 'blob' || column.columnType === 'SQLiteBlob') {
-        sqliteType = 'BLOB';
-      }
+        if (column.dataType === "integer" || column.columnType === "SQLiteInteger") {
+          sqliteType = "INTEGER";
+        } else if (column.dataType === "real" || column.columnType === "SQLiteReal") {
+          sqliteType = "REAL";
+        } else if (column.dataType === "text" || column.columnType === "SQLiteText") {
+          sqliteType = "TEXT";
+        } else if (column.dataType === "blob" || column.columnType === "SQLiteBlob") {
+          sqliteType = "BLOB";
+        }
 
-      return `${columnName} ${sqliteType}`;
-    }).join(', ');
+        return `${columnName} ${sqliteType}`;
+      })
+      .join(", ");
 
     const createTableSQL = `
       CREATE TABLE IF NOT EXISTS ${historyTableName} (
@@ -107,10 +109,7 @@ export class Chronicle {
   /**
    * Insert a record with automatic versioning
    */
-  async insert<T extends Record<string, unknown>>(
-    tableName: string,
-    values: T
-  ): Promise<void> {
+  async insert<T extends Record<string, unknown>>(tableName: string, values: T): Promise<void> {
     const versionedTable = this.versionedTables.get(tableName);
     if (!versionedTable) {
       throw new Error(`Table ${tableName} is not registered for versioning`);
@@ -118,16 +117,16 @@ export class Chronicle {
 
     // Insert into main table
     const columns = Object.keys(values);
-    const placeholders = columns.map(() => '?').join(', ');
-    const columnNames = columns.join(', ');
-    const insertValues = columns.map(col => values[col]);
+    const placeholders = columns.map(() => "?").join(", ");
+    const columnNames = columns.join(", ");
+    const insertValues = columns.map((col) => values[col]);
 
     this.sqlite
       .prepare(`INSERT INTO ${tableName} (${columnNames}) VALUES (${placeholders})`)
       .run(...insertValues);
 
     // Record in history table
-    await this.recordVersion(tableName, values, 'INSERT');
+    await this.recordVersion(tableName, values, "INSERT");
   }
 
   /**
@@ -145,8 +144,8 @@ export class Chronicle {
 
     // Get current record before update
     const whereClause = Object.keys(where)
-      .map(key => `${key} = ?`)
-      .join(' AND ');
+      .map((key) => `${key} = ?`)
+      .join(" AND ");
     const whereValues = Object.values(where);
 
     const current = this.sqlite
@@ -155,8 +154,8 @@ export class Chronicle {
 
     // Update main table
     const setClause = Object.keys(values)
-      .map(key => `${key} = ?`)
-      .join(', ');
+      .map((key) => `${key} = ?`)
+      .join(", ");
     const updateValues = [...Object.values(values), ...whereValues];
 
     this.sqlite
@@ -164,16 +163,13 @@ export class Chronicle {
       .run(...updateValues);
 
     // Record in history table (store the NEW values)
-    await this.recordVersion(tableName, { ...current, ...values }, 'UPDATE');
+    await this.recordVersion(tableName, { ...current, ...values }, "UPDATE");
   }
 
   /**
    * Delete a record with automatic versioning
    */
-  async delete(
-    tableName: string,
-    where: Record<string, unknown>
-  ): Promise<void> {
+  async delete(tableName: string, where: Record<string, unknown>): Promise<void> {
     const versionedTable = this.versionedTables.get(tableName);
     if (!versionedTable) {
       throw new Error(`Table ${tableName} is not registered for versioning`);
@@ -181,8 +177,8 @@ export class Chronicle {
 
     // Get current record before deletion
     const whereClause = Object.keys(where)
-      .map(key => `${key} = ?`)
-      .join(' AND ');
+      .map((key) => `${key} = ?`)
+      .join(" AND ");
     const whereValues = Object.values(where);
 
     const current = this.sqlite
@@ -190,16 +186,14 @@ export class Chronicle {
       .get(...whereValues);
 
     if (!current) {
-      throw new Error('Record not found');
+      throw new Error("Record not found");
     }
 
     // Delete from main table
-    this.sqlite
-      .prepare(`DELETE FROM ${tableName} WHERE ${whereClause}`)
-      .run(...whereValues);
+    this.sqlite.prepare(`DELETE FROM ${tableName} WHERE ${whereClause}`).run(...whereValues);
 
     // Record in history table
-    await this.recordVersion(tableName, current, 'DELETE');
+    await this.recordVersion(tableName, current, "DELETE");
   }
 
   /**
@@ -212,9 +206,9 @@ export class Chronicle {
   ): Promise<void> {
     const historyTableName = `${tableName}${this.config.historyTableSuffix}`;
 
-    const columns = ['version_operation', ...Object.keys(values)];
-    const placeholders = columns.map(() => '?').join(', ');
-    const columnNames = columns.join(', ');
+    const columns = ["version_operation", ...Object.keys(values)];
+    const placeholders = columns.map(() => "?").join(", ");
+    const columnNames = columns.join(", ");
     const insertValues = [operation, ...Object.values(values)];
 
     this.sqlite
@@ -225,15 +219,12 @@ export class Chronicle {
   /**
    * Get all versions of a record
    */
-  async getVersions<T>(
-    tableName: string,
-    where: Record<string, unknown>
-  ): Promise<T[]> {
+  async getVersions<T>(tableName: string, where: Record<string, unknown>): Promise<T[]> {
     const historyTableName = `${tableName}${this.config.historyTableSuffix}`;
 
     const whereClause = Object.keys(where)
-      .map(key => `${key} = ?`)
-      .join(' AND ');
+      .map((key) => `${key} = ?`)
+      .join(" AND ");
     const whereValues = Object.values(where);
 
     const versions = this.sqlite
@@ -272,8 +263,10 @@ export class Chronicle {
     }
 
     // Remove version metadata fields
-    const { version_id, version_created_at, version_operation, ...data } =
-      version as Record<string, unknown>;
+    const { version_id, version_created_at, version_operation, ...data } = version as Record<
+      string,
+      unknown
+    >;
 
     // Update the current record with the version data
     await this.update(tableName, data, options.where);

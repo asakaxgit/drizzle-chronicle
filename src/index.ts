@@ -4,7 +4,7 @@
  * @packageDocumentation
  */
 
-export { Chronicle } from './core/chronicle';
+export { Chronicle } from "./core/chronicle";
 export type {
   ChronicleConfig,
   ChronicleDatabase,
@@ -15,4 +15,4 @@ export type {
   VersionQueryOptions,
   VersionedRecord,
   RollbackOptions,
-} from './core/types';
+} from "./core/types";

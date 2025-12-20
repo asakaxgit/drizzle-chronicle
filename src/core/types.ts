@@ -1,15 +1,15 @@
-import type { SQLiteColumn, SQLiteTable } from 'drizzle-orm/sqlite-core';
-import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import type { SQLiteColumn, SQLiteTable } from "drizzle-orm/sqlite-core";
+import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 
 /**
  * Strategy for versioning: simple, uni-temporal, or bi-temporal
  */
-export type VersioningStrategy = 'simple-versioning' | 'uni-temporal' | 'bi-temporal';
+export type VersioningStrategy = "simple-versioning" | "uni-temporal" | "bi-temporal";
 
 /**
  * Type of operation that created a version
  */
-export type VersionOperation = 'INSERT' | 'UPDATE' | 'DELETE';
+export type VersionOperation = "INSERT" | "UPDATE" | "DELETE";
 
 /**
  * Configuration options for Chronicle
