@@ -15,6 +15,7 @@ Drizzle Chronicle extends [Drizzle ORM](https://orm.drizzle.team/) with temporal
 - ✅ **Rollback Support** - Restore records to previous versions
 - ✅ **Type-Safe** - Full TypeScript support with type inference
 - ✅ **SQLite Support** - Currently supports SQLite (PostgreSQL coming soon)
+ - ✅ **Better-SQLite3 Examples** - Uses Drizzle's Better-SQLite3 adapter in examples/tests
 
 ## Installation
 
@@ -91,6 +92,10 @@ await chronicle.rollback("users", {
   versionId: 1,
   where: { id: 1 },
 });
+
+// Query a specific version by ID
+const v3 = await chronicle.getVersion("users", 3);
+console.log(v3.version_operation); // e.g. "UPDATE"
 ```
 
 ## API Reference
@@ -202,6 +207,7 @@ See the `examples/` directory for complete examples:
 
 - **Basic CRUD** (`examples/basic-crud.ts`) - Demonstrates insert, update, delete, and version queries
 - **History Queries** (`examples/history-queries.ts`) - Shows version history and rollback operations
+ - **Rollback Scenario** (`examples/rollback.ts`) - Demonstrates reverting to a specific version
 
 Run examples:
 
@@ -224,6 +230,10 @@ History tables include:
 - `version_id` - Auto-incrementing version identifier
 - `version_created_at` - Timestamp when version was created
 - `version_operation` - Operation type (INSERT, UPDATE, DELETE)
+ 
+Notes:
+- Updates record the post-update values in history (not pre-update snapshots).
+- Rollback performs an `update()` to restore values, which creates a new history entry.
 
 ### Version Tracking
 
