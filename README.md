@@ -62,6 +62,7 @@ const chronicle = new Chronicle(db, {
 });
 
 // Register table for versioning
+// registerTable accepts both the Drizzle table schema instance and the table name
 chronicle.registerTable(users, "users");
 
 // Create the table (using Drizzle or raw SQL)
@@ -118,6 +119,10 @@ new Chronicle(db: ChronicleDatabase, config?: ChronicleConfig)
 
 Register a table for versioning. Creates a history table if `autoCreateHistoryTables` is enabled.
 
+**Parameters:**
+- `table` - Drizzle table schema instance (e.g., the result of `sqliteTable(...)`)
+- `tableName` - String name of the table to register
+
 ```typescript
 chronicle.registerTable(users, "users");
 ```
@@ -125,6 +130,10 @@ chronicle.registerTable(users, "users");
 ##### `insert(tableName, values)`
 
 Insert a record with automatic versioning.
+
+**Parameters:**
+- `tableName` - String name of the registered table
+- `values` - Object containing the record data to insert
 
 ```typescript
 await chronicle.insert("users", {
@@ -138,6 +147,11 @@ await chronicle.insert("users", {
 
 Update a record and create a new version.
 
+**Parameters:**
+- `tableName` - String name of the registered table
+- `values` - Object containing the fields to update
+- `where` - Object with key-value pairs to identify the record(s)
+
 ```typescript
 await chronicle.update("users", { email: "new@example.com" }, { id: 1 });
 ```
@@ -145,6 +159,10 @@ await chronicle.update("users", { email: "new@example.com" }, { id: 1 });
 ##### `delete(tableName, where)`
 
 Delete a record and record the deletion in history.
+
+**Parameters:**
+- `tableName` - String name of the registered table
+- `where` - Object with key-value pairs to identify the record(s)
 
 ```typescript
 await chronicle.delete("users", { id: 1 });
@@ -154,6 +172,10 @@ await chronicle.delete("users", { id: 1 });
 
 Get all versions of a record.
 
+**Parameters:**
+- `tableName` - String name of the registered table
+- `where` - Object with key-value pairs to filter records
+
 ```typescript
 const versions = await chronicle.getVersions<VersionedUser>("users", { id: 1 });
 ```
@@ -162,6 +184,10 @@ const versions = await chronicle.getVersions<VersionedUser>("users", { id: 1 });
 
 Get a specific version by version ID.
 
+**Parameters:**
+- `tableName` - String name of the registered table
+- `versionId` - Numeric version ID to retrieve
+
 ```typescript
 const version = await chronicle.getVersion<VersionedUser>("users", 5);
 ```
@@ -169,6 +195,10 @@ const version = await chronicle.getVersion<VersionedUser>("users", 5);
 ##### `rollback(tableName, options)`
 
 Rollback a record to a specific version.
+
+**Parameters:**
+- `tableName` - String name of the registered table
+- `options` - Object with `versionId` (version to restore) and `where` (record identifier)
 
 ```typescript
 await chronicle.rollback("users", {
