@@ -39,3 +39,8 @@ Thumbs.db
 # Temporary files
 *.tmp
 .cache/
+
+# Coverage files
+coverage/
+*.lcov
+.nyc_output/
